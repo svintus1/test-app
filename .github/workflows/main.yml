@@ -15,5 +15,6 @@ jobs:
         run: |
           cd /opt/actions-runner/_work/test-app/test-app
           docker compose down
+          docker images prune -f
           docker compose up --build -d
       
