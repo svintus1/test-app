@@ -1,0 +1,43 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 3000:3000
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    container_name: backend
+    restart: always
+    env_file:
+      - ./backend/.env
+      - ./db-data/.env
+    networks:
+      - testNetwork
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - ./db-data/.env
+    networks:
+      - testNetwork
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+networks:
+  testNetwork:
+    driver: bridge
+
+volumes:
+  pg_data:
