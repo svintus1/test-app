@@ -9,7 +9,7 @@ export default function Test() {
   const fetchData = async () => {
     try {
       const encodedName = encodeURIComponent(inputName);
-      const response = await fetch(`http://localhost:8000/?name=${encodedName}`);
+      const response = await fetch(`http://188.243.140.226:8000/?name=${encodedName}`);
       const data = await response.json();
       setMessage(data.message);
     } catch (error) {
