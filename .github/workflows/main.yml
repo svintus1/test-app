@@ -17,7 +17,7 @@ jobs:
       # Шаг 4: Запуск Docker Compose
       - name: Run Docker Compose
         run: |
-          cd /opt
+          cd /opt/app
           docker compose down
           docker compose up --build -d
       
