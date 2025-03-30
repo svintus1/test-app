@@ -10,12 +10,14 @@ jobs:
     steps:
       # Шаг 1: Проверяем код
       - name: Checkout repository
-        uses: actions/checkout@v3
+        run: |
+          cd /opt
+          git clone https://github.com/svintus1/test-app.git
 
       # Шаг 4: Запуск Docker Compose
       - name: Run Docker Compose
         run: |
-          cd $GITHUB_WORKSPACE
+          cd /opt
           docker compose down
           docker compose up --build -d
       
