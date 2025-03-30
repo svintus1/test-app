@@ -8,11 +8,12 @@ jobs:
     runs-on: self-hosted  # Указываем использование self-hosted runner
 
     steps:
+      - name: fefes
+        run: |
+          export GITHUB_WORKSPACE="/opt/app"
       # Шаг 1: Проверяем код
       - name: Checkout repository
-        run: |
-          cd /opt
-          git clone https://github.com/svintus1/test-app.git
+        uses: actions/checkout@v3
 
       # Шаг 4: Запуск Docker Compose
       - name: Run Docker Compose
