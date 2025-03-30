@@ -16,5 +16,5 @@ jobs:
       - name: Run Docker Compose
         run: |
           cd $GITHUB_WORKSPACE
-          sudo docker compose up -d
+          docker compose up -d
       
