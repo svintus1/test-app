@@ -1,0 +1,20 @@
+name: Test Application Deployment
+on:
+  push:
+    branches: 
+      -  master
+jobs:
+  deploy:
+    runs-on: self-hosted  # Указываем использование self-hosted runner
+
+    steps:
+      # Шаг 1: Проверяем код
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Шаг 4: Запуск Docker Compose
+      - name: Run Docker Compose
+        run: |
+          cd $GITHUB_WORKSPACE
+          docker compose up -d
+      
