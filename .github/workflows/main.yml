@@ -14,8 +14,4 @@ jobs:
       - name: Run Docker Compose
         run: |
           docker compose down
-          docker image prune -f
-          docker container prune -f
-          docker volume prune -f
           docker compose up --build -d
-      
