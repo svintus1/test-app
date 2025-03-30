@@ -16,6 +16,6 @@ jobs:
       - name: Run Docker Compose
         run: |
           cd $GITHUB_WORKSPACE
-          docker-compose down
-          docker-compose up --build --no-cache
+          docker compose down
+          docker compose up --build --no-cache
       
