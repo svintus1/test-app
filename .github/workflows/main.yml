@@ -8,12 +8,11 @@ jobs:
     runs-on: self-hosted  # Указываем использование self-hosted runner
 
     steps:
-      - name: fefes
-        run: |
-          export GITHUB_WORKSPACE="/opt/app"
       # Шаг 1: Проверяем код
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          set-safe-directory: '/opt/app'
 
       # Шаг 4: Запуск Docker Compose
       - name: Run Docker Compose
