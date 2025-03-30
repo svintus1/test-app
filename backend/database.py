@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, create_engine, select, Session
+from sqlmodel import SQLModel, create_engine, select, Session 
 from dotenv import load_dotenv
 import os
 from models import Test
@@ -13,11 +13,15 @@ def init_db():
     # Создаём сессию вручную
     with Session(engine) as session:
         # Проверяем, есть ли уже данные в таблице (чтобы избежать дублирования)
-        if not session.exec(select(Test)).first():
-            hello = Test(hello="Привет! Мое имя ")
-            session.add(hello)
-            session.commit()
-            print("Добавлена тестовая запись:", hello)
+        statement = select(Test)
+        tests = session.exec(statement).all()
+        for test in tests:
+            session.delete(test)
+
+        hello = Test(hello="Кто сосал? - ")
+        session.add(hello)
+        session.commit()
+        print("Добавлена тестовая запись:", hello)
     
 
 def get_session():
