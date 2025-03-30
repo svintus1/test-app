@@ -24,7 +24,7 @@ export default function Test() {
         type="text"
         value={inputName}
         onChange={(e) => setInputName(e.target.value)}
-        placeholder="Введите ваше имя"
+        placeholder="Введите вашеееее имя"
         className="p-2 border rounded"
       />
       
