@@ -13,8 +13,8 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          cd /opt/actions-runner/_work/test-app/test-app
           docker compose down
           docker image prune -f
+          docker container prune -f
           docker compose up --build -d
       
