@@ -14,7 +14,7 @@ def init_db():
     with Session(engine) as session:
         # Проверяем, есть ли уже данные в таблице (чтобы избежать дублирования)
         if not session.exec(select(Test)).first():
-            hello = Test(hello="Hello! My name is ")
+            hello = Test(hello="Привет! Мое имя ")
             session.add(hello)
             session.commit()
             print("Добавлена тестовая запись:", hello)
