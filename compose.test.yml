@@ -25,7 +25,7 @@ services:
     ports:
       - 8001:8000
     depends_on:
-      - db
+      - test_db
 
   test_db:
     image: postgres:17
