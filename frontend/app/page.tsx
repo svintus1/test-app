@@ -1,6 +1,7 @@
 "use client"; // Для Next.js
 
 import { useState } from 'react';
+import { API_URL } from '@/lib/config';
 
 export default function Test() {
   const [message, setMessage] = useState<string>("");
@@ -9,7 +10,7 @@ export default function Test() {
   const fetchData = async () => {
     try {
       const encodedName = encodeURIComponent(inputName);
-      const response = await fetch(`http://188.243.140.226:8000/?name=${encodedName}`);
+      const response = await fetch(`${API_URL}/?name=${encodedName}`);
       const data = await response.json();
       setMessage(data.message);
     } catch (error) {
