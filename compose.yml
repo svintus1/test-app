@@ -32,12 +32,12 @@ services:
       - ./db-data/.env
     networks:
       - testNetwork
-#    volumes:
-#      - pg_data:/var/lib/postgresql/data
+    volumes:
+      - pg_data:/var/lib/postgresql/data
 
 networks:
   testNetwork:
     driver: bridge
 
-#volumes:
-#  pg_data:
+volumes:
+  pg_data:
