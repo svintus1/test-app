@@ -38,4 +38,4 @@ jobs:
       - name: Run Docker Compose
         run: |
           cd $APP_DIR
-          docker compose -f $COMPOSE_FILE up --build -d
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} docker compose -f $COMPOSE_FILE up --build -d
