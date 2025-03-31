@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 
 # Считываем переменную окружения APP_ENV
 env = os.getenv("APP_ENV")  # по умолчанию development
-if env not in ("development", "production"):
+if env not in ("development", "production", "staging"):
     env = "development"
-# Загружем переменные окружения из .env.development или .env.production в зависимости от значения APP_ENV
+# Загружем переменные окружения из .env-файла в зависимости от значения APP_ENV
 load_dotenv(f"backend/.env.{env}", override=True)
 
 BACKEND_HOST = os.getenv("BACKEND_HOST")
