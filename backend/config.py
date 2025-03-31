@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 env = os.getenv("APP_ENV", "development")  # по умолчанию development
 if env not in ("development", "production"):
     env = "development"
-# Загружем переменные окружения из .env.delopment или .env.production в зависимости от значения APP_ENV
+# Загружем переменные окружения из .env.development или .env.production в зависимости от значения APP_ENV
 load_dotenv(f".env.{env}")
 
 HOST = os.getenv("HOST", "127.0.0.1")
