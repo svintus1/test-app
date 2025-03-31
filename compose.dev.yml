@@ -8,7 +8,7 @@ services:
     networks:
       - myNetwork
     environment:
-      -  APP_MODE=production
+      -  APP_MODE=development
     ports:
       - 3002:3000
 
