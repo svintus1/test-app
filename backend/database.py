@@ -1,12 +1,10 @@
 from sqlmodel import SQLModel, create_engine, select, Session 
-from dotenv import load_dotenv
 import os
 from models import Test
+from config import POSTGRES_HOST, POSTGRES_PORT
 
-load_dotenv()
-
-DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
-print("DATABASE_URL:", DATABASE_URL)
+print(POSTGRES_PORT)
+DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{POSTGRES_HOST}:{POSTGRES_PORT}/{os.getenv('POSTGRES_DB')}"
 engine = create_engine(DATABASE_URL)
 
 def init_db():

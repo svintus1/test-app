@@ -5,14 +5,15 @@ from sqlmodel import select
 from typing import Annotated
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from config import HOST, PORT
+from config import BACKEND_HOST, BACKEND_PORT, FRONTEND_HOST, FRONTEND_PORT
+import os
 
 app = FastAPI()
 
 # Разрешите запросы с фронтенда
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[f"http://{HOST}:{PORT}"],  # Укажите адрес вашего фронтенда
+    allow_origins=[f"http://{FRONTEND_HOST}:{FRONTEND_PORT}"],  # Укажите адрес вашего фронтенда
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
@@ -27,4 +28,5 @@ async def get_homepage(name: Annotated[str | None, Query()] = "test", session: S
     return {"message": f"{test_data.hello}{name}"}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host=HOST, port=PORT, reload=True)
+    is_dev = os.getenv("APP_ENV", "development") == "development"
+    uvicorn.run("main:app", host=BACKEND_HOST, port=BACKEND_PORT, reload=is_dev)

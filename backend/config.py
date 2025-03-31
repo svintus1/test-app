@@ -2,11 +2,15 @@ import os
 from dotenv import load_dotenv
 
 # Считываем переменную окружения APP_ENV
-env = os.getenv("APP_ENV", "development")  # по умолчанию development
+env = os.getenv("APP_ENV")  # по умолчанию development
 if env not in ("development", "production"):
     env = "development"
 # Загружем переменные окружения из .env.development или .env.production в зависимости от значения APP_ENV
-load_dotenv(f"./.env.{env}")
+load_dotenv(f"backend/.env.{env}", override=True)
 
-HOST = os.getenv("HOST", "127.0.0.1")
-PORT = int(os.getenv("PORT", 8000))
+BACKEND_HOST = os.getenv("BACKEND_HOST")
+BACKEND_PORT = int(os.getenv("BACKEND_PORT"))
+FRONTEND_HOST = os.getenv("FRONTEND_HOST")
+FRONTEND_PORT = int(os.getenv("FRONTEND_PORT"))
+POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_PORT = int(os.getenv("POSTGRES_PORT"))
