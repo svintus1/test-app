@@ -21,7 +21,7 @@ services:
     env_file:
       - ./db-data/.env
     networks:
-      - testNetwork
+      - myNetwork
     ports:
       - 8000:8000
     depends_on:
@@ -34,13 +34,8 @@ services:
     env_file:
       - ./db-data/.env
     networks:
-      - testNetwork
-    volumes:
-      - pg_data:/var/lib/postgresql/data
+      - myNetwork
 
 networks:
-  testNetwork:
+  myNetwork:
     driver: bridge
-
-volumes:
-  pg_data:

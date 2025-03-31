@@ -1,20 +1,20 @@
 services:
-  frontend:
+  test_frontend:
     build:
       context: ./frontend
       dockerfile: ./Dockerfile
-    container_name: frontend
+    container_name: test_frontend
     restart: always
     environment:
       -  APP_MODE=production #имитация запуска приложения в продакшн
     ports:
       - 3001:3000
 
-  backend:
+  test_backend:
     build:
       context: ./backend
       dockerfile: ./Dockerfile
-    container_name: backend
+    container_name: test_backend
     restart: always
     environment:
       - APP_ENV=production
@@ -27,20 +27,15 @@ services:
     depends_on:
       - db
 
-  db:
+  test_db:
     image: postgres:17
-    container_name: postgres_db
+    container_name: test_postgres_db
     restart: always
     env_file:
       - ./db-data/.env
     networks:
       - testNetwork
-    volumes:
-      - pg_data:/var/lib/postgresql/data
 
 networks:
   testNetwork:
     driver: bridge
-
-volumes:
-  pg_data:
