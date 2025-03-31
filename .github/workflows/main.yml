@@ -21,7 +21,7 @@ jobs:
             echo "COMPOSE_FILE=compose.yml" >> $GITHUB_ENV
             echo "APP_DIR=/opt/app/master" >> $GITHUB_ENV
           else
-            echo "COMPOSE_FILE=docker-compose.test.yml" >> $GITHUB_ENV
+            echo "COMPOSE_FILE=compose.test.yml" >> $GITHUB_ENV
             echo "APP_DIR=/opt/app/develop" >> $GITHUB_ENV
           fi
 
