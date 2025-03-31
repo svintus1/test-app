@@ -5,7 +5,7 @@ import { API_URL } from '@/lib/config';
 
 export default function Test() {
   const [message, setMessage] = useState<string>("");
-  const [inputName, setInputName] = useState<string>("Гость"); // Состояние для ввода
+  const [inputName, setInputName] = useState<string>("Тестовый гость"); // Состояние для ввода
 
   const fetchData = async () => {
     try {
