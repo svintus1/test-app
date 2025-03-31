@@ -18,8 +18,8 @@ services:
     restart: always
     environment:
       - APP_ENV=production
-    env_file:
-      - ./db-data/.env
+    envv_file:
+      - ./db-data/.en
     networks:
       - testNetwork
     ports:
