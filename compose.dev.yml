@@ -5,6 +5,8 @@ services:
       dockerfile: ./Dockerfile
     container_name: frontend
     restart: always
+    environment:
+      -  APP_MODE=development
     ports:
       - 3000:3000
 
@@ -14,9 +16,8 @@ services:
       dockerfile: ./Dockerfile
     container_name: backend
     restart: always
-    env_file:
-      - ./backend/.env.development
-      - ./db-data/.env
+    environment:
+      - APP_ENV=development
     networks:
       - testNetwork
     ports:
