@@ -7,6 +7,8 @@ services:
     restart: always
     environment:
       -  APP_MODE=production #имитация запуска приложения в продакшн
+    networks:
+      - testNetwork
     ports:
       - 3001:3000
 
@@ -25,9 +27,9 @@ services:
     ports:
       - 8001:8000
     depends_on:
-      - test_db
+      - db
 
-  test_db:
+  db:
     image: postgres:17
     container_name: test_postgres_db
     restart: always
