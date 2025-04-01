@@ -17,7 +17,7 @@ def init_db():
         for test in tests:
             session.delete(test)
 
-        hello = Test(hello="Кто сосал? - ")
+        hello = Test(hello="Надо было поменять для теста, я и поменял - ")
         session.add(hello)
         session.commit()
         print("Добавлена тестовая запись:", hello)
