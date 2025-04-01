@@ -1,8 +1,8 @@
 FROM node:20-alpine as builder
 WORKDIR /opt/app
-COPY *.json ./
+COPY package*.json .
 RUN npm install
-COPY . .
+# COPY . .
 CMD ["sh", "-c", "\
 if [ \"$APP_MODE\" = 'development' ]; then \
 npm run dev; \

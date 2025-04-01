@@ -11,6 +11,9 @@ services:
       -  APP_MODE=development
     ports:
       - 3002:3000
+    volumes:
+      - ./frontend:/opt/app  # Монтируем папку фронтенда
+      - /opt/app/node_modules  # Изолируем зависимости
 
   backend:
     build:
@@ -26,6 +29,9 @@ services:
       - myNetwork
     ports:
       - 8002:8000
+    volumes:
+      - ./backend:/opt/app # Монтируем папку бэкенда
+      - /opt/app/__pycache__ # Изолируем кэш Python
     depends_on:
       - db
 
@@ -35,9 +41,14 @@ services:
     restart: always
     env_file:
       - ./db-data/.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     networks:
       - myNetwork
 
 networks:
   myNetwork:
     driver: bridge
+
+volumes:
+  pg_data:
