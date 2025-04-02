@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, create_engine, select, Session 
 import os
-from models import Test
-from config import POSTGRES_HOST, POSTGRES_PORT
+from app.models import Test
+from app.core.config import POSTGRES_HOST, POSTGRES_PORT
 
 print(POSTGRES_PORT)
 DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{POSTGRES_HOST}:{POSTGRES_PORT}/{os.getenv('POSTGRES_DB')}"
