@@ -1,13 +1,9 @@
 import os
-from dotenv import load_dotenv
 
 # Считываем переменную окружения APP_ENV
-env = os.getenv("APP_ENV")  # по умолчанию development
-if env not in ("development", "production", "staging"):
-    env = "development"
-
-# Загружем переменные окружения из .env-файла в зависимости от значения APP_ENV
-load_dotenv(f"./env/.env.{env}", override=True)
+APP_ENV = os.getenv("APP_ENV")  # по умолчанию development
+if APP_ENV not in ("development", "production", "staging"):
+    APP_ENV = "development"
 
 BACKEND_HOST = os.getenv("BACKEND_HOST")
 BACKEND_PORT = int(os.getenv("BACKEND_PORT"))

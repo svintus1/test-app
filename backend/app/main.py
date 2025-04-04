@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.core.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from app.core.config import BACKEND_HOST, BACKEND_PORT, FRONTEND_HOST, FRONTEND_PORT
+from app.core.config import BACKEND_HOST, BACKEND_PORT, FRONTEND_HOST, FRONTEND_PORT, APP_ENV
 from app.api.main import api_router
 import os
 
@@ -23,5 +23,5 @@ init_db()
 
 
 if __name__ == "__main__":
-    is_dev = os.getenv("APP_ENV", "development") == "development"
+    is_dev = APP_ENV == "development"
     uvicorn.run("main:app", host=BACKEND_HOST, port=BACKEND_PORT, reload=is_dev)
