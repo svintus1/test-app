@@ -9,6 +9,6 @@ router = APIRouter()
 
 # HTTP-эндпоинты
 @router.get("/")
-async def get_homepage(name: Annotated[str | None, Query()] = "test", session: Session = Depends(get_session)):
+def get_homepage(name: Annotated[str | None, Query()] = "test", session: Session = Depends(get_session)):
     test_data = session.exec(select(Test)).first()
     return {"message": f"{test_data.hello}{name}"}
