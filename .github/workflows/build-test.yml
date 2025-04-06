@@ -2,11 +2,12 @@ name: Тестирование и пробная развертка
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      -  develop
     
 jobs:
   build:
-    runs-on: [self-hosted, server2]
+    runs-on: self-hosted
     environment: staging
     steps:
       - name: Синхронизация проекта с репозиторием
