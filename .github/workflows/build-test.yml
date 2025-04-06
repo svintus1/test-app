@@ -55,7 +55,7 @@ jobs:
           docker run --rm \
           --env-file .env \
           backend-image \
-          pytest app/api/main.py -s -v
+          pytest app/tests -s -v
   
   stage:
     needs: test
