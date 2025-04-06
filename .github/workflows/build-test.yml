@@ -33,7 +33,7 @@ jobs:
           
       - name: Сборка докер образа
         run: |
-          docker build -f ./backend/Dockerfile -t backend-image .
+          docker build -f ./backend/Dockerfile -t backend-image ./backend
       
       - name: Сохранение .env как артефакта
         uses: actions/upload-artifact@v4
