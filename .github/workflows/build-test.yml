@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: secret_env
-          path: .env
+          path: ${{ github.workspace }}/.env
           
       - name: Сборка докер образа
         run: |
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: secret_env
-          path: ./
+          path: ${{ github.workspace }}/
       
       # - name: Тестирование приложения
       #   run: |
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: secret_env
-          path: ./
+          path: ${{ github.workspace }}/
           
       - name: Тестовый запуск проекта
         run: |
