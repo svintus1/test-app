@@ -7,8 +7,7 @@ on:
     
 jobs:
   build:
-    runs-on:
-      labels: server2
+    runs-on: [ self-hosted, staging ]
     environment: staging
     steps:
       - name: Синхронизация проекта с репозиторием
