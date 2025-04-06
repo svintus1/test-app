@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, server1]
+    runs-on: [self-hosted, production ]
     steps:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
