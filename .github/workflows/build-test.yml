@@ -69,4 +69,5 @@ jobs:
           
       - name: Тестовый запуск проекта
         run: |
-          COMPOSE_PROJECT_NAME=${{ github.ref_name }} docker compose up --build -d
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
+          docker compose up --build --force-recreate -d
