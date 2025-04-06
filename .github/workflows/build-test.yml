@@ -2,33 +2,16 @@ name: Тестирование и пробная развертка
 
 on:
   push:
-    branches:
-      - develop
-
+    branches: [ develop ]
+    
 jobs:
-  test:
+  build:
     runs-on: [self-hosted, server2]
     environment: staging
     steps:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
-          
-      - name: Сборка приожения
-        run: |
-          docker build -f ./backend/Dockerfile -t backend-image .
-          
-      - name: Тестирование приложения
-        run: |
-          docker run --rm \
-          backend-image \
-          pytest app/api/main.py -s -v
-  
-  deploy:
-    runs-on: [self-hosted, server2]
-    environment: staging
-    steps:
+      
       - name: Запись секретов для тестирования в файл .env
         run: |
           cat <<EOF > .env
@@ -46,7 +29,44 @@ jobs:
           NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
           NEXT_PUBLIC_API_PORT=${{ secrets.NEXT_PUBLIC_API_PORT }}
           EOF
-
+          
+      - name: Сборка докер образа
+        run: |
+          docker build -f ./backend/Dockerfile -t backend-image .
+      
+      - name: Сохранение .env как артефакта
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-file
+          path: .env
+          
+  test:
+    needs: build
+    runs-on: [self-hosted, server2]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/download-artifact@v3
+        with:
+          name: env-file
+      
+      - name: Тестирование приложения
+        run: |
+          docker run --rm \
+          --env-file .env \
+          backend-image \
+          pytest app/api/main.py -s -v
+  
+  stage:
+    needs: test
+    runs-on: [self-hosted, server2]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/download-artifact@v3
+        with:
+          name: env-file
+          
       - name: Тестовый запуск проекта
         run: |
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} docker compose up --build -d
