@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
-      
+    
       - name: Запись секретов для тестирования в файл .env
         run: |
           cat <<EOF > .env
