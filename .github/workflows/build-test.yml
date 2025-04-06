@@ -30,16 +30,16 @@ jobs:
           NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
           NEXT_PUBLIC_API_PORT=${{ secrets.NEXT_PUBLIC_API_PORT }}
           EOF
-          
-      - name: Сборка докер образа
-        run: |
-          docker build -f ./backend/Dockerfile -t backend-image ./backend
       
       - name: Сохранение .env как артефакта
         uses: actions/upload-artifact@v4
         with:
-          name: .env
-          path: ./
+          name: secret_env
+          path: .env
+          
+      - name: Сборка докер образа
+        run: |
+          docker build -f ./backend/Dockerfile -t backend-image ./backend
           
   test:
     needs: build
@@ -49,7 +49,7 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: .env
+          name: secret_env
           path: ./
       
       # - name: Тестирование приложения
@@ -67,7 +67,7 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: .env
+          name: secret_env
           path: ./
           
       - name: Тестовый запуск проекта
