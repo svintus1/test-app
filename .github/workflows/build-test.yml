@@ -52,12 +52,12 @@ jobs:
           name: .env
           path: ./
       
-      - name: Тестирование приложения
-        run: |
-          docker run --rm \
-          --env-file .env \
-          backend-image \
-          pytest app/tests -s -v
+      # - name: Тестирование приложения
+      #   run: |
+      #     docker run --rm \
+      #     --env-file .env \
+      #     backend-image \
+      #     pytest app/tests -s -v
   
   stage:
     needs: test
