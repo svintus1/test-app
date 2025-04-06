@@ -1,4 +1,4 @@
-name: Deployment
+name: Deployment to production
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: [self-hosted, server1]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
 
