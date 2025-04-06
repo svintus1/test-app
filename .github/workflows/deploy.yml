@@ -1,1 +1,40 @@
+name: Deployment
 
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, server1]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set environment variables
+        run: |
+          if [ "${{ github.ref_name }}" == "master" ]; then
+            echo "COMPOSE_FILE=compose.yml" >> $GITHUB_ENV
+            echo "APP_DIR=/opt/app/master" >> $GITHUB_ENV
+          else
+            echo "COMPOSE_FILE=compose.test.yml" >> $GITHUB_ENV
+            echo "APP_DIR=/opt/app/develop" >> $GITHUB_ENV
+          fi
+
+      - name: Create deployment directory
+        run: |
+          mkdir -p $APP_DIR
+          rsync -av --delete . $APP_DIR/
+
+      - name: Stop existing containers
+        run: |
+          cd $APP_DIR
+          docker compose -f $COMPOSE_FILE down
+
+      - name: Run Docker Compose
+        run: |
+          cd $APP_DIR
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} docker compose -f $COMPOSE_FILE up --build -d
