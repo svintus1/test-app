@@ -33,7 +33,7 @@ jobs:
 
       - name: Запуск проекта
         run: |
-          docker compose down -v
-          docker compose build --no-cache
+          docker compose -f ${{ github.workspace }}/compose.yml down -v
+          docker compose build -f ${{ github.workspace }}/compose.yml --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose up -d
+          docker compose -f ${{ github.workspace }}/compose.yml up -d
