@@ -30,8 +30,6 @@ jobs:
           NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
           NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
           EOF
-
-          chmod 644 ${{ github.workspace }}/.env
       
       - name: Кешируем .env
         uses: actions/cache@v4
@@ -75,5 +73,6 @@ jobs:
       - name: Тестовый запуск проекта
         run: |
           docker compose down -v
+          docker compose build --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose up --build --force-recreate -d
+          docker compose up -d
