@@ -37,4 +37,4 @@ jobs:
           docker compose -f ${{ github.workspace }}/compose.yml build --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
           docker compose -f ${{ github.workspace }}/compose.yml up -d
-          mkdit ${{ github.workspace }}/penis
+          mkdir ${{ github.workspace }}/penis
