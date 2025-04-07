@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: [self-hosted, production ]
+    environment: production
     steps:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
