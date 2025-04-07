@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
 
       - name: Запись секретов продакшена в файл .env
         run: |
