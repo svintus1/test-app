@@ -33,11 +33,11 @@ jobs:
 
           chmod 644 ${{ github.workspace }}/.env
       
-      - name: Сохранение .env как артефакта
-        uses: actions/upload-artifact@v4
+      - name: Кешируем .env
+        uses: actions/cache@v4
         with:
-          name: secret_env
-          path: ${{ github.workspace }}/.env
+          path: .env
+          key: ${{ runner.os }}-env-${{ github.run_id }}
           
       - name: Сборка докер образа
         run: |
@@ -48,11 +48,11 @@ jobs:
     runs-on: [ self-hosted, staging ]
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/download-artifact@v4
+
+      - uses: actions/cache@v4
         with:
-          name: secret_env
-          path: ${{ github.workspace }}/
+          path: .env
+          key: ${{ runner.os }}-env-${{ github.run_id }}
       
       # - name: Тестирование приложения
       #   run: |
@@ -67,10 +67,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache@v4
         with:
-          name: secret_env
-          path: ${{ github.workspace }}/
+          path: .env
+          key: ${{ runner.os }}-env-${{ github.run_id }}
           
       - name: Тестовый запуск проекта
         run: |
