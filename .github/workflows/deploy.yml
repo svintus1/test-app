@@ -1,0 +1,38 @@
+name: Развертывание проекта в продакшн
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, production ]
+    steps:
+      - name: Синхронизация проекта с репозиторием
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Запись секретов продакшена в файл .env
+        run: |
+          cat <<EOF > .env
+          APP_ENV=${{ secrets.APP_ENV }}
+          APP_MODE=${{ secrets.APP_MODE }}
+          POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+          BACKEND_HOST=${{ secrets.BACKEND_HOST }}
+          BACKEND_PORT=${{ secrets.BACKEND_PORT }}
+          FRONTEND_HOST=${{ secrets.FRONTEND_HOST }}
+          FRONTEND_PORT=${{ secrets.FRONTEND_PORT }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
+          NEXT_PUBLIC_API_PORT=${{ secrets.NEXT_PUBLIC_API_PORT }}
+          EOF
+
+      - name: Запуск проекта
+        run: |
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
+          docker compose up --build --force-recreate -d

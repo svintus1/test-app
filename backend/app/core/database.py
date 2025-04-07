@@ -1,7 +1,7 @@
-from sqlmodel import SQLModel, create_engine, select, Session 
+from sqlmodel import SQLModel, create_engine, delete, Session 
 import os
-from models import Test
-from config import POSTGRES_HOST, POSTGRES_PORT
+from app.models import Test
+from app.core.config import POSTGRES_HOST, POSTGRES_PORT
 
 print(POSTGRES_PORT)
 DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{POSTGRES_HOST}:{POSTGRES_PORT}/{os.getenv('POSTGRES_DB')}"
@@ -12,15 +12,13 @@ def init_db():
     # Создаём сессию вручную
     with Session(engine) as session:
         # Проверяем, есть ли уже данные в таблице (чтобы избежать дублирования)
-        statement = select(Test)
-        tests = session.exec(statement).all()
-        for test in tests:
-            session.delete(test)
+        statement = delete(Test)
+        session.exec(statement)
 
-        hello = Test(hello="Надо было поменять для теста, я и поменял - ")
+        hello = Test(hello="Привет, ")
         session.add(hello)
         session.commit()
-        print("Добавлена тестовая запись:", hello)
+        print("Добавлена тестовая запись:", hello.hello)
     
 
 def get_session():
