@@ -36,5 +36,6 @@ jobs:
       - name: Запуск проекта
         run: |
           docker compose down -v
+          docker compose build --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose up --build --force-recreate -d
+          docker compose up -d
