@@ -17,20 +17,20 @@ jobs:
 
       - name: Запись секретов продакшена в файл .env
         run: |
-          cat <<EOF > .env
-          APP_ENV=${{ secrets.APP_ENV }}
-          APP_MODE=${{ secrets.APP_MODE }}
+          cat <<EOF > ${{ github.workspace }}/.env
+          APP_ENV=${{ vars.APP_ENV }}
+          APP_MODE=${{ vars.APP_MODE }}
           POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
-          BACKEND_HOST=${{ secrets.BACKEND_HOST }}
-          BACKEND_PORT=${{ secrets.BACKEND_PORT }}
+          BACKEND_HOST=${{ vars.BACKEND_HOST }}
+          BACKEND_PORT=${{ vars.BACKEND_PORT }}
           FRONTEND_HOST=${{ secrets.FRONTEND_HOST }}
-          FRONTEND_PORT=${{ secrets.FRONTEND_PORT }}
+          FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
-          NEXT_PUBLIC_API_PORT=${{ secrets.NEXT_PUBLIC_API_PORT }}
+          NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
           EOF
 
       - name: Запуск проекта
