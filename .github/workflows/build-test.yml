@@ -45,7 +45,7 @@ jobs:
           
       - name: Сборка докер образа
         run: |
-          docker build -f ./backend/Dockerfile -t backend-image ./backend
+          docker compose build --no-cache
           
   test:
     needs: build
@@ -58,12 +58,12 @@ jobs:
           path: ./config
           key: ${{ runner.os }}-env-${{ github.run_id }}
       
-      # - name: Тестирование приложения
-      #   run: |
-      #     docker run --rm \
-      #     --env-file .env \
-      #     backend-image \
-      #     pytest app/tests -s -v
+      - name: Тестирование приложения
+        run: |
+          docker run --rm \
+          --env-file .env \
+          backend-image \
+          pytest app/tests -s -v
   
   stage:
     needs: test
