@@ -39,8 +39,5 @@ jobs:
 
       - name: Запуск проекта
         run: |
-          docker stop $(docker ps -aq)
-          docker system prune -a -f --volumes
-          docker compose -f ${{ github.workspace }}/compose.yml build --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose -f ${{ github.workspace }}/compose.yml up -d --force-recreate
+          docker compose -f ${{ github.workspace }}/compose.yml up -d --build --force-recreate
