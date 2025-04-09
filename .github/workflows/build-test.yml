@@ -13,67 +13,71 @@ jobs:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
     
-      - name: Запись секретов для тестирования в файл .env
+      - name: Запись секретов для тестирования в директорию config
         run: |
-          cat <<EOF > ${{ github.workspace }}/.env
-          APP_ENV=${{ vars.APP_ENV }}
+          mkdir ${{ github.workspace }}/config
+          
+          cat <<EOF > ${{ github.workspace }}/config/.env.frontend
           APP_MODE=${{ vars.APP_MODE }}
+          NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
+          NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
+          EOF
+
+          cat <<EOF > ${{ github.workspace }}/config/.env.backend
+          APP_ENV=${{ vars.APP_ENV }}
           POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
           BACKEND_HOST=${{ vars.BACKEND_HOST }}
           BACKEND_PORT=${{ vars.BACKEND_PORT }}
           FRONTEND_HOST=${{ secrets.FRONTEND_HOST }}
           FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+          EOF
+
+          cat <<EOF > ${{ github.workspace }}/config/.env.pg
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
-          NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
           EOF
-      
-      - name: Кешируем .env
-        uses: actions/cache@v4
-        with:
-          path: .env
-          key: ${{ runner.os }}-env-${{ github.run_id }}
           
       - name: Сборка докер образа
         run: |
-          docker build -f ./backend/Dockerfile -t backend-image ./backend
+          docker build --no-cache \
+          -f ./backend/Dockerfile  \
+          -t backend:test \
+          ${{ github.workspace }}
           
   test:
     needs: build
     runs-on: [ self-hosted, staging ]
     steps:
-      - uses: actions/checkout@v4
+      - name: Тестирование приложения
+        run: |
+          docker network create test-network
+          
+          docker run -d \
+          --env-file=${{ github.workspace }}/config/.env.pg \
+          --network=test-network\
+          --name db_test \
+          postgres:17
+          
+          sleep 10
+          
+          docker run -d --rm \
+          --env-file=${{ github.workspace }}/config/.env.pg \
+          backend:test \
+          --name backend_test \
+          -e POSTGRES_HOST=db_test \
+          --network=test-network \
+          pytest app/tests -s -v
 
-      - uses: actions/cache@v4
-        with:
-          path: .env
-          key: ${{ runner.os }}-env-${{ github.run_id }}
-      
-      # - name: Тестирование приложения
-      #   run: |
-      #     docker run --rm \
-      #     --env-file .env \
-      #     backend-image \
-      #     pytest app/tests -s -v
+          docker rm -f db_test
+          docker network rm test-network
   
   stage:
     needs: test
     runs-on: [ self-hosted, staging ]
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/cache@v4
-        with:
-          path: .env
-          key: ${{ runner.os }}-env-${{ github.run_id }}
-          
       - name: Тестовый запуск проекта
         run: |
-          docker stop $(docker ps -aq)
-          docker system prune -a -f --volumes
-          docker compose -f ${{ github.workspace }}/compose.yml build --no-cache
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose -f ${{ github.workspace }}/compose.yml up -d --force-recreate
+          docker compose -f ${{ github.workspace }}/compose.yml up -d --build --force-recreate
