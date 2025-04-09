@@ -47,24 +47,30 @@ jobs:
           -t backend:test \
           ${{ github.workspace }}
           
-          docker build --no-cache \
-          --env-file=${{ github.workspace }}/config/.env.pg \
-          -f ./backend/Dockerfile  \
-          -t backend:test \
-          ${{ github.workspace }}
-          
   test:
     needs: build
     runs-on: [ self-hosted, staging ]
     steps:
       - name: Тестирование приложения
         run: |
-          docker run --rm \
-          db
+          docker network create test-network
+          
+          docker run \
+          --env-file=${{ github.workspace }}/config/.env.pg \
+          --network=test-network\
+          --name db_test \
+          postgres:17 \
+          -d
           
           docker run --rm \
-          backend \
+          backend:test \
+          --name backend_test \
+          -e POSTGRES_HOST=db_test\
+          --network=test-network\
           pytest app/tests -s -v
+
+          docker rm -f db_test
+          docker network rm test-network
   
   stage:
     needs: test
