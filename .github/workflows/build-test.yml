@@ -15,26 +15,32 @@ jobs:
     
       - name: Запись секретов для тестирования в файл .env
         run: |
-          cat <<EOF > ${{ github.workspace }}/.env
-          APP_ENV=${{ vars.APP_ENV }}
+          cat <<EOF > ${{ github.workspace }}/config/.env.frontend
           APP_MODE=${{ vars.APP_MODE }}
+          NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
+          NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
+          EOF
+
+          cat <<EOF > ${{ github.workspace }}/config/.env.backend
+          APP_ENV=${{ vars.APP_ENV }}
           POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
           BACKEND_HOST=${{ vars.BACKEND_HOST }}
           BACKEND_PORT=${{ vars.BACKEND_PORT }}
           FRONTEND_HOST=${{ secrets.FRONTEND_HOST }}
           FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+          EOF
+
+          cat <<EOF > ${{ github.workspace }}/config/.env.pg
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
-          NEXT_PUBLIC_API_PORT=${{ vars.NEXT_PUBLIC_API_PORT }}
           EOF
-      
+          
       - name: Кешируем .env
         uses: actions/cache@v4
         with:
-          path: .env
+          path: ./config
           key: ${{ runner.os }}-env-${{ github.run_id }}
           
       - name: Сборка докер образа
@@ -49,7 +55,7 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: .env
+          path: ./config
           key: ${{ runner.os }}-env-${{ github.run_id }}
       
       # - name: Тестирование приложения
@@ -67,7 +73,7 @@ jobs:
       
       - uses: actions/cache@v4
         with:
-          path: .env
+          path: ./config
           key: ${{ runner.os }}-env-${{ github.run_id }}
           
       - name: Тестовый запуск проекта
