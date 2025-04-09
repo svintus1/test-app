@@ -7,10 +7,6 @@ services:
     restart: always
     env_file:
       -  config/.env.frontend
-    environment:
-      -  APP_MODE=${APP_MODE}
-      -  NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}
-      -  NEXT_PUBLIC_API_PORT=${NEXT_PUBLIC_API_PORT}
     networks:
       - my_network
     ports:
