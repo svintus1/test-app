@@ -42,7 +42,6 @@ jobs:
       - name: Сборка докер образа
         run: |
           docker build --no-cache \
-          --env-file=${{ github.workspace }}/config/.env.pg \
           -f ./backend/Dockerfile  \
           -t backend:test \
           ${{ github.workspace }}
@@ -55,18 +54,20 @@ jobs:
         run: |
           docker network create test-network
           
-          docker run \
+          docker run -d \
           --env-file=${{ github.workspace }}/config/.env.pg \
           --network=test-network\
           --name db_test \
-          postgres:17 \
-          -d
+          postgres:17
           
-          docker run --rm \
+          sleep 10
+          
+          docker run -d --rm \
+          --env-file=${{ github.workspace }}/config/.env.pg \
           backend:test \
           --name backend_test \
-          -e POSTGRES_HOST=db_test\
-          --network=test-network\
+          -e POSTGRES_HOST=db_test \
+          --network=test-network \
           pytest app/tests -s -v
 
           docker rm -f db_test
@@ -78,7 +79,5 @@ jobs:
     steps:
       - name: Тестовый запуск проекта
         run: |
-          docker stop $(docker ps -aq)
-          docker system prune -a -f --volumes
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose -f ${{ github.workspace }}/compose.yml up -d --force-recreate
+          docker compose -f ${{ github.workspace }}/compose.yml up -d --build --force-recreate
