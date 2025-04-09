@@ -5,6 +5,8 @@ services:
       dockerfile: ./Dockerfile
     container_name: frontend
     restart: always
+    env_file:
+      -  config/.env.frontend
     environment:
       -  APP_MODE=${APP_MODE}
       -  NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}
@@ -20,17 +22,9 @@ services:
       dockerfile: ./Dockerfile
     container_name: backend
     restart: always
-    environment:
-      -  APP_ENV=${APP_ENV}
-      -  POSTGRES_USER=${POSTGRES_USER}
-      -  POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      -  POSTGRES_DB=${POSTGRES_DB}
-      -  POSTGRES_HOST=${POSTGRES_HOST}
-      -  POSTGRES_PORT=${POSTGRES_PORT}
-      -  BACKEND_HOST=${BACKEND_HOST}
-      -  BACKEND_PORT=${BACKEND_PORT}
-      -  FRONTEND_HOST=${FRONTEND_HOST}
-      -  FRONTEND_PORT=${FRONTEND_PORT}  
+    env_file:
+      -  config/.env.backend
+      -  config/.env.pg
     networks:
       - my_network
     ports:
@@ -42,10 +36,8 @@ services:
     image: postgres:17
     container_name: postgres_db
     restart: always
-    environment:
-      -  POSTGRES_USER=${POSTGRES_USER}
-      -  POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      -  POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      -  config/.env.pg
     networks:
       - my_network
     volumes:
