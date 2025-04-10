@@ -41,7 +41,7 @@ jobs:
 
       - name: Запуск проекта
         run: |
-          echo "admin:admin" | sudo chpasswd
+          echo "admin:admin" | chpasswd
           useradd -m -s /bin/bash 
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
           docker compose -f ${{ github.workspace }}/compose.yml up -d --build --force-recreate
