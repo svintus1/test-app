@@ -47,15 +47,26 @@ jobs:
     needs: build
     runs-on: [ self-hosted, staging ]
     steps:
-      - name: Тестирование приложения
+      - name: Запуск БД и бэкенда
         run: |
-          docker compose down -f
-          docker compose up -d db
-          docker compose run --rm backend pytest app/tests -s -v
-      
-      - name: Остановка после тестов
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
+          docker compose -f ${{ github.workspace }}/compose.yml up -d db backend
+
+      - name: Ожидание запуска БД
+        run: |
+          echo "Ждём 10 секунд, чтобы БД поднялась..."
+          sleep 10
+
+      - name: Запуск тестов
+        run: |
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
+          docker compose -f ${{ github.workspace }}/compose.yml exec -T backend pytest app/tests -s -v
+
+      - name: Остановка и очистка контейнеров
         if: always()
-        run: docker compose down
+        run: |
+          COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
+          docker compose -f ${{ github.workspace }}/compose.yml down -v --remove-orphans
   
   stage:
     needs: test
