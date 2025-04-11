@@ -13,8 +13,10 @@ jobs:
       - name: Синхронизация проекта с репозиторием
         uses: actions/checkout@v4
 
-      - name: Запись секретов продакшена в файл .env
+      - name: Запись секретов продакшена в файл .env.frontend
         run: |
+          mkdir ${{ github.workspace }}/config
+          
           cat <<EOF > ${{ github.workspace }}/config/.env.frontend
           APP_MODE=${{ vars.APP_MODE }}
           NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }}
