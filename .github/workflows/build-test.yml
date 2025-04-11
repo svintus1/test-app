@@ -49,12 +49,13 @@ jobs:
     steps:
       - name: Тестирование приложения
         run: |
+          ocker compose down
           docker compose up -d db
           docker compose run --rm backend pytest app/tests -s -v
       
       - name: Остановка после тестов
         if: always()
-        run: docker compose -f ${{ github.workspace }}/compose.yml down
+        run: docker compose down
   
   stage:
     needs: test
