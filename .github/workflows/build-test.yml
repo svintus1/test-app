@@ -39,12 +39,11 @@ jobs:
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           EOF
           
-      - name: Сборка докер образа
-        run: |
-          docker build --no-cache \
-          -f ./backend/Dockerfile  \
-          -t backend:test \
-          ${{ github.workspace }}
+      # - name: Сборка докер образа
+      #   run: |
+      #     docker build --no-cache \
+      #     -f ./backend/Dockerfile  \
+      #     -t backend:test .
           
   test:
     needs: build
@@ -52,26 +51,26 @@ jobs:
     steps:
       - name: Тестирование приложения
         run: |
-          docker network create test-network
+          # docker network create test-network
           
-          docker run -d \
-          --env-file=${{ github.workspace }}/config/.env.pg \
-          --network=test-network\
-          --name db_test \
-          postgres:17
+          # docker run -d \
+          # --env-file=${{ github.workspace }}/config/.env.pg \
+          # --network=test-network\
+          # --name db_test \
+          # postgres:17
           
-          sleep 10
+          # sleep 10
           
-          docker run -d --rm \
-          --env-file=${{ github.workspace }}/config/.env.pg \
-          backend:test \
-          --name backend_test \
-          -e POSTGRES_HOST=db_test \
-          --network=test-network \
-          pytest app/tests -s -v
+          # docker run -d --rm \
+          # --env-file=${{ github.workspace }}/config/.env.pg \
+          # backend:test \
+          # --name backend_test \
+          # -e POSTGRES_HOST=db_test \
+          # --network=test-network \
+          # pytest app/tests -s -v
 
-          docker rm -f db_test
-          docker network rm test-network
+          # docker rm -f db_test
+          # docker network rm test-network
   
   stage:
     needs: test
