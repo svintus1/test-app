@@ -39,11 +39,9 @@ jobs:
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           EOF
           
-      # - name: Сборка докер образа
-      #   run: |
-      #     docker build --no-cache \
-      #     -f ./backend/Dockerfile  \
-      #     -t backend:test .
+      - name: Сборка докер образов
+        run: |
+          docker compose -f ${{ github.workspace }}/compose.yml build --no-cache
           
   test:
     needs: build
@@ -51,26 +49,12 @@ jobs:
     steps:
       - name: Тестирование приложения
         run: |
-          # docker network create test-network
-          
-          # docker run -d \
-          # --env-file=${{ github.workspace }}/config/.env.pg \
-          # --network=test-network\
-          # --name db_test \
-          # postgres:17
-          
-          # sleep 10
-          
-          # docker run -d --rm \
-          # --env-file=${{ github.workspace }}/config/.env.pg \
-          # backend:test \
-          # --name backend_test \
-          # -e POSTGRES_HOST=db_test \
-          # --network=test-network \
-          # pytest app/tests -s -v
-
-          # docker rm -f db_test
-          # docker network rm test-network
+          docker compose up -f ${{ github.workspace }}/compose.yml -d db
+          docker compose run -f ${{ github.workspace }}/compose.yml --rm backend pytest app/tests -s -v
+      
+      - name: Остановка после тестов
+        if: always()
+        run: docker compose -f ${{ github.workspace }}/compose.yml down
   
   stage:
     needs: test
@@ -79,4 +63,4 @@ jobs:
       - name: Тестовый запуск проекта
         run: |
           COMPOSE_PROJECT_NAME=${{ github.ref_name }} \
-          docker compose -f ${{ github.workspace }}/compose.yml up -d --build --force-recreate
+          docker compose -f ${{ github.workspace }}/compose.yml up -d
